@@ -2,22 +2,30 @@ pragma solidity >=0.6.0 <0.9.0;
 //SPDX-License-Identifier: MIT
 
 import "hardhat/console.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 //import "@openzeppelin/contracts/access/Ownable.sol"; //https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol
 
-contract YourContract {
+contract YourContract is ERC721 {
 
-  event SetPurpose(address sender, string purpose);
+  using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
 
-  string public purpose = "Building Unstoppable Apps";
+    constructor() public ERC721("YourCollectible", "YCB") {
+      _setBaseURI("https://ipfs.io/ipfs/");
+    }
 
-  constructor() {
-    // what should we do on deploy?
-  }
+    function mintItem(address to, string memory tokenURI)
+        public
+        returns (uint256)
+    {
+        _tokenIds.increment();
 
-  function setPurpose(string memory newPurpose) public {
-    purpose = newPurpose;
-    console.log(msg.sender,"set purpose to",purpose);
-    emit SetPurpose(msg.sender, purpose);
-  }
+        uint256 id = _tokenIds.current();
+        _mint(to, id);
+        _setTokenURI(id, tokenURI);
+
+        return id;
+    }
 
 }
