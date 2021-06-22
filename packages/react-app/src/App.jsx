@@ -28,6 +28,8 @@ const { BufferList } = require("bl");
 // https://www.npmjs.com/package/ipfs-http-client
 const ipfsAPI = require("ipfs-http-client");
 
+const { config, ethers } = require("hardhat");
+
 const ipfs = ipfsAPI({ host: "ipfs.infura.io", port: "5001", protocol: "https" });
 /*
     Welcome to 🏗 scaffold-eth !
@@ -373,6 +375,8 @@ function App(props) {
 
   const [transferToAddresses, setTransferToAddresses] = useState({});
 
+
+
   return (
     <div className="App">
       {/* ✏️ Edit the header and change the title to your project name */}
@@ -507,7 +511,7 @@ function App(props) {
 
             <Route path="/mint">
             <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
-              <form onSubmit="App.castVote(); return false;">
+              <form onSubmit="">
                 <div class="form-group">
                   <label for="candidatesSelect">Name of NFT</label>
                   <input
@@ -523,7 +527,47 @@ function App(props) {
                                       id="description"
                                     />
                 </div>
-                <button type="submit" class="btn btn-primary">Mint your NFT</button>
+                <Button
+                              style={{ margin: 8 }}
+                              loading={sending}
+                              size="large"
+                              shape="round"
+                              type="primary"
+                              onClick={async () => {
+                                                     const toAddress = address;
+                                                     const yourContract = await ethers.getContractAt("YourContract", "0xB01eA75e13C8F2F3C86dBBC59fC024Ae450D31Bf")
+                                                     const NFT = {
+                                                         "description": "$description",
+                                                         "external_url": "https://austingriffith.com/portfolio/paintings/",
+                                                         "image": "https://austingriffith.com/images/paintings/buffalo.jpg",
+                                                         "name": "Buffalo",
+                                                         "attributes": [
+                                                            {
+                                                              "trait_type": "BackgroundColor",
+                                                              "value": "green"
+                                                            },
+                                                            {
+                                                              "trait_type": "Eyes",
+                                                              "value": "googly"
+                                                            },
+                                                            {
+                                                              "trait_type": "Stamina",
+                                                              "value": 42
+                                                            }
+                                                         ]
+                                                       };
+                                                       console.log("Uploading NFT...");
+                                                         const uploaded = await ipfs.add(JSON.stringify(NFT));
+
+                                                         console.log("Minting NFT with IPFS hash ("+uploaded.path+")");
+                                                         await yourContract.mintItem(toAddress,uploaded.path,{gasLimit:400000});
+
+
+                                                         await sleep(delayMS);
+                                                         }}
+                            >
+                              Mint NFT
+                            </Button>
                 <hr />
               </form>
             </div>
