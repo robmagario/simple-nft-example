@@ -505,6 +505,30 @@ function App(props) {
             </div>
           </Route>
 
+            <Route path="/mint">
+            <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+              <form onSubmit="App.castVote(); return false;">
+                <div class="form-group">
+                  <label for="candidatesSelect">Name of NFT</label>
+                  <input
+                    type="text"
+                    placeholder="give a name"
+                    id="name"
+                  />
+
+                  <label for="candidatesSelect">Description of NFT</label>
+                                    <input
+                                      type="text"
+                                      placeholder="write a nice description"
+                                      id="description"
+                                    />
+                </div>
+                <button type="submit" class="btn btn-primary">Mint your NFT</button>
+                <hr />
+              </form>
+            </div>
+          </Route>
+
           <Route path="/transfers">
             <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
               <List
