@@ -390,6 +390,16 @@ function App(props) {
               YourCollectibles
             </Link>
           </Menu.Item>
+           <Menu.Item key="/">
+                      <Link
+                        onClick={() => {
+                          setRoute("/mint");
+                        }}
+                        to="/mint"
+                      >
+                        Mint NFT
+                      </Link>
+                    </Menu.Item>
           <Menu.Item key="/transfers">
             <Link
               onClick={() => {
